@@ -80,23 +80,23 @@ services:
     env_file: 
       - .env
     expose:
-      - "8080:8080"
+      - "8080"
     networks:
       - inception
 
-  static:
-    container_name: static
-    image: static
-    build: ./requirements/bonus/static
-    restart: always
-    env_file: 
-      - .env
-    volumes:
-      - ./requirements/bonus/static/content:/usr/share/nginx/html
-    ports:
-      - "8443:8443"
-    networks:
-      - inception
+  # static:
+  #   container_name: static
+  #   image: static
+  #   build: ./requirements/bonus/static
+  #   restart: always
+  #   env_file: 
+  #     - .env
+  #   volumes:
+  #     - ./requirements/bonus/static/content:/usr/share/nginx/html
+  #   ports:
+  #     - "8443:8443"
+  #   networks:
+  #     - inception
 
   cadvisor:
     container_name: cadvisor
@@ -111,7 +111,7 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
-      - "6000:6000"
+      - "6000"
     networks:
       - inception
 
@@ -119,14 +119,14 @@ volumes:
   wordpress_data:
     driver: local
     driver_opts:
-      device: "/home/nzhuzhle/data/wordpress"
+      device: "./requirements/wordpress/data"
       o: bind
       type: none
 
   mariadb_data:
     driver: local
     driver_opts:
-      device: "/home/nzhuzhle/data/mariadb"
+      device: "./requirements/mariadb/data"
       o: bind
       type: none
 

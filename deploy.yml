@@ -1,0 +1,46 @@
+- name: Setup and deploy containers
+  hosts: aws
+  become: true # to execute as a root
+  tasks:
+    - name: Create directory
+      file:
+        path: /opt/cloud-1
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+      tags: [setup]
+
+    - name: Copy docker-compose
+      copy:
+        src: ./docker-compose.yml
+        dest: /opt/cloud-1/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      tags: [deploy]
+
+    - name: Copy environment
+      copy:
+        src: ./.env
+        dest: /opt/cloud-1/.env
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      tags: [setup]
+
+    - name: Copy requirements
+      copy:
+        src: ./requirements
+        dest: /opt/cloud-1/
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+      tags: [setup]
+
+    - name: Docker-compose build and up
+      community.docker.docker_compose:
+        project_src: /opt/cloud-1
+        state: present
+        build: yes
+      tags: [deploy]
