@@ -44,3 +44,9 @@
         state: present
         build: yes
       tags: [deploy]
+
+    # - name: Docker-compose build and up
+    #   command: sudo docker compose -f /opt/cloud-1/docker-compose.yml up -d --build
+    #   args:
+    #     chdir: /opt/cloud-1
+    #   tags: [deploy]

@@ -10,8 +10,8 @@ services:
       - .env
     ports:
       - "443:443"
-    volumes:
-      - wordpress_data:/var/www/html
+    # volumes:
+    #   - wordpress_data:/var/www/html
     networks:
       - inception
 
@@ -22,8 +22,8 @@ services:
     image: wordpress
     build: ./requirements/wordpress
     restart: always
-    volumes:
-      - wordpress_data:/var/www/html
+    # volumes:
+    #   - wordpress_data:/var/www/html
     env_file: 
       - .env
     expose:
@@ -38,51 +38,51 @@ services:
     restart: always
     env_file: 
       - .env
-    volumes:
-      - mariadb_data:/var/lib/mysql
+    # volumes:
+    #   - mariadb_data:/var/lib/mysql
     expose:
       - "3306"
     networks:
       - inception
 
-  redis:
-    container_name: redis
-    image: redis
-    build: ./requirements/bonus/redis
-    restart: always
-    env_file: 
-      - .env
-    ports:
-      - "6379:6379"
-    networks:
-      - inception
+  # redis:
+  #   container_name: redis
+  #   image: redis
+  #   build: ./requirements/bonus/redis
+  #   restart: always
+  #   env_file: 
+  #     - .env
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - inception
 
-  ftp:
-    container_name: ftp
-    image: ftp
-    build: ./requirements/bonus/ftp
-    restart: always
-    env_file: 
-      - .env
-    volumes:
-      - wordpress_data:/var/www/html
-    ports:
-      - "21:21"
-      - "21100-21110:21100-21110"
-    networks:
-      - inception
+  # ftp:
+  #   container_name: ftp
+  #   image: ftp
+  #   build: ./requirements/bonus/ftp
+  #   restart: always
+  #   env_file: 
+  #     - .env
+  #   volumes:
+  #     - wordpress_data:/var/www/html
+  #   ports:
+  #     - "21:21"
+  #     - "21100-21110:21100-21110"
+  #   networks:
+  #     - inception
 
-  adminer:
-    container_name: adminer
-    image: adminer
-    build: ./requirements/bonus/adminer
-    restart: always
-    env_file: 
-      - .env
-    expose:
-      - "8080"
-    networks:
-      - inception
+  # adminer:
+  #   container_name: adminer
+  #   image: adminer
+  #   build: ./requirements/bonus/adminer
+  #   restart: always
+  #   env_file: 
+  #     - .env
+  #   expose:
+  #     - "8080"
+  #   networks:
+  #     - inception
 
   # static:
   #   container_name: static
@@ -98,22 +98,22 @@ services:
   #   networks:
   #     - inception
 
-  cadvisor:
-    container_name: cadvisor
-    image: cadvisor
-    build: ./requirements/bonus/cadvisor
-    restart: always
-    env_file: 
-      - .env
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    expose:
-      - "6000"
-    networks:
-      - inception
+  # cadvisor:
+  #   container_name: cadvisor
+  #   image: cadvisor
+  #   build: ./requirements/bonus/cadvisor
+  #   restart: always
+  #   env_file: 
+  #     - .env
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   expose:
+  #     - "6000"
+  #   networks:
+  #     - inception
 
 volumes:
   wordpress_data:
