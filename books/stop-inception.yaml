@@ -1,0 +1,20 @@
+- name: Stop Docker Compose stack and cleans up
+  hosts: myhosts
+  become: true
+
+  tasks:
+    - name: Stop Docker Compose stack
+      community.docker.docker_compose_v2:
+        project_src: /home/{{ ansible_user }}/app
+        state: absent
+
+    - name: Remove unused Docker images
+      shell: docker image prune -af
+
+    - name: Remove unused Docker volumes
+      shell: docker volume prune --volumes -y
+
+    - name: Remove application files
+      file:
+        path: /home/{{ ansible_user }}/app
+        state: absent
