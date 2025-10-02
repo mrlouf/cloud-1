@@ -16,14 +16,6 @@ services:
     networks:
       - inception
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-    networks:
-      - inception
-
   wordpress:
     container_name: wordpress
     image: wordpress:php8.2-fpm
