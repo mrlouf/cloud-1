@@ -1,0 +1,69 @@
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - wordpress_data:/var/www/html:ro
+    depends_on:
+      - wordpress
+    restart: always
+    networks:
+      - inception
+
+  wordpress:
+    container_name: wordpress
+    image: wordpress:php8.2-fpm
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./wp-install.sh:/docker-entrypoint-initwp.d/wp-install.sh:ro
+      - ./cloud.jpg:/var/www/html/cloud.jpg:ro
+    entrypoint: ["/bin/bash", "-c", "/docker-entrypoint-initwp.d/wp-install.sh && docker-entrypoint.sh php-fpm"]
+    restart: always
+    networks:
+      - inception
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    networks:
+      - inception
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - inception
+
+volumes:
+  mariadb_data:
+  wordpress_data:
+
+networks:
+  inception:
+    driver: bridge
