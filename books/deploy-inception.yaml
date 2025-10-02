@@ -3,37 +3,44 @@
   become: true
 
   tasks:
+    - name: Create application directory
+      file:
+        path: /home/{{ ansible_user }}/app
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: '0755'
+
     - name: Copy docker-compose.yml
       copy:
-        src: docker-compose.yml
+        src: /home/{{ ansible_user }}/app/docker-compose.yml
         dest: /home/{{ ansible_user }}/app/docker-compose.yml
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy .env file
       copy:
-        src: .env
+        src: /home/{{ ansible_user }}/app/.env
         dest: /home/{{ ansible_user }}/app/.env
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy image file
       copy:
-        src: cloud.jpg
+        src: /home/{{ ansible_user }}/app/cloud.jpg
         dest: /home/{{ ansible_user }}/app/cloud.jpg
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy wp-install.sh script
       copy:
-        src: wp-install.sh
+        src: /home/{{ ansible_user }}/app/wp-install.sh
         dest: /home/{{ ansible_user }}/app/wp-install.sh
         owner: "{{ ansible_user }}"
         mode: '0755'
 
     - name: Copy nginx.conf file
       copy:
-        src: nginx.conf
+        src: /home/{{ ansible_user }}/app/nginx.conf
         dest: /home/{{ ansible_user }}/app/nginx.conf
         owner: "{{ ansible_user }}"
         mode: '0644'
