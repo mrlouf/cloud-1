@@ -8,7 +8,7 @@ COPY ./conf/mdb.cnf /etc/mysql/mariadb.conf.d/
 COPY ./tools/mdb_start.sh /usr/local/bin/
 
 RUN chmod a+x /usr/local/bin/mdb_start.sh
-RUN mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld && chmod 755 /var/run/mysqld
+RUN mkdir -p /var/run/mysql && chown -R mysql:mysql /var/run/mysql && chmod 755 /var/run/mysql
 
 EXPOSE 3306
 
