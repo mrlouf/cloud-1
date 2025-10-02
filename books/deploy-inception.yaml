@@ -45,6 +45,17 @@
         owner: "{{ ansible_user }}"
         mode: '0644'
 
+    - name: Obtain SSL certificates with Certbot (standalone)
+      shell: |
+        docker run --rm -p 80:80 \
+          -v $PWD/certbot/conf:/etc/letsencrypt \
+          -v $PWD/certbot/www:/var/www/certbot \
+          certbot/certbot certonly --standalone \
+          --non-interactive --agree-tos --email admin@email.com \
+          -d mrlouf.studio -d www.mrlouf.studio
+      args:
+        chdir: /home/{{ ansible_user }}/app
+
     - name: Start Docker Compose stack
       community.docker.docker_compose_v2:
         project_src: /home/{{ ansible_user }}/app
