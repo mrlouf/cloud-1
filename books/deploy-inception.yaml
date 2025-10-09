@@ -5,43 +5,43 @@
   tasks:
     - name: Create application directory
       file:
-        path: /home/{{ ansible_user }}/app
+        path: /home/{{ ansible_user }}/cloud-1/app
         state: directory
         owner: "{{ ansible_user }}"
         mode: '0755'
 
     - name: Copy docker-compose.yml
       copy:
-        src: /home/{{ ansible_user }}/app/docker-compose.yml
-        dest: /home/{{ ansible_user }}/app/docker-compose.yml
+        src: /home/{{ ansible_user }}/cloud-1/app/docker-compose.yml
+        dest: /home/{{ ansible_user }}/cloud-1/app/docker-compose.yml
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy .env file
       copy:
-        src: /home/{{ ansible_user }}/app/.env
-        dest: /home/{{ ansible_user }}/app/.env
+        src: /home/{{ ansible_user }}/cloud-1/app/.env
+        dest: /home/{{ ansible_user }}/cloud-1/app/.env
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy image file
       copy:
-        src: /home/{{ ansible_user }}/app/cloud.jpg
-        dest: /home/{{ ansible_user }}/app/cloud.jpg
+        src: /home/{{ ansible_user }}/cloud-1/app/cloud.jpg
+        dest: /home/{{ ansible_user }}/cloud-1/app/cloud.jpg
         owner: "{{ ansible_user }}"
         mode: '0644'
 
     - name: Copy wp-install.sh script
       copy:
-        src: /home/{{ ansible_user }}/app/wp-install.sh
-        dest: /home/{{ ansible_user }}/app/wp-install.sh
+        src: /home/{{ ansible_user }}/cloud-1/app/wp-install.sh
+        dest: /home/{{ ansible_user }}/cloud-1/app/wp-install.sh
         owner: "{{ ansible_user }}"
         mode: '0755'
 
     - name: Copy nginx.conf file
       copy:
-        src: /home/{{ ansible_user }}/app/nginx.conf
-        dest: /home/{{ ansible_user }}/app/nginx.conf
+        src: /home/{{ ansible_user }}/cloud-1/app/nginx.conf
+        dest: /home/{{ ansible_user }}/cloud-1/app/nginx.conf
         owner: "{{ ansible_user }}"
         mode: '0644'
 
@@ -54,9 +54,9 @@
           --non-interactive --agree-tos --email admin@email.com \
           -d mrlouf.studio -d www.mrlouf.studio
       args:
-        chdir: /home/{{ ansible_user }}/app
+        chdir: /home/{{ ansible_user }}/cloud-1/app
 
     - name: Start Docker Compose stack
       community.docker.docker_compose_v2:
-        project_src: /home/{{ ansible_user }}/app
+        project_src: /home/{{ ansible_user }}/cloud-1/app
         state: present
