@@ -53,19 +53,14 @@ services:
     networks:
       - inception
 
-  phpmyadmin:
-    container_name: phpmyadmin
-    image: phpmyadmin
-    restart: always
+  adminer:
+    container_name: adminer
+    image: adminer:latest
     ports:
-      - 8081:80
-    environment:
-      - PMA_HOST=mariadb
-      - PMA_PORT=3306
-      - PMA_USER=root
-      - PMA_PASSWORD=rootpassword
-      - PMA_ABSOLUTE_URI=https://mrlouf.studio/phpmyadmin/
-      - SESSION_COOKIE_SECURE=1
+      - "8081:8080"
+    restart: always
+    env_file:
+      - .env
     depends_on:
       - mariadb
     networks:
