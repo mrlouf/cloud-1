@@ -1,0 +1,11 @@
+- name: Prepare environment
+  hosts: aws
+  become: true # to execute as a root
+  tasks:
+    - name: Install Docker
+      apt:
+        name: 
+          - docker.io 
+          - docker-compose
+        state: present
+        update_cache: yes
