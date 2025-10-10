@@ -2,5 +2,6 @@ Asus.pem
 .env
 .terraform/
 .terraform.lock.hcl
+*.tfstate
 *.tfstate.*
 *.tfstate.backup
