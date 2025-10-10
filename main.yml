@@ -1,0 +1,20 @@
+- name: Install all dependencies
+  hosts: myhosts
+  become: true
+  roles:
+    - install_dependencies
+  tags: install_dependencies
+
+- name: Deploy Inception stack
+  hosts: myhosts
+  become: true
+  roles:
+    - deploy
+  tags: deploy
+
+- name: Stop and clean
+  hosts: myhosts
+  become: true
+  roles:
+    - stop
+  tags: stop

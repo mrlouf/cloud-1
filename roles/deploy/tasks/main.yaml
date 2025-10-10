@@ -1,6 +1,7 @@
-- name: Install and configure Docker with Docker Compose
-  hosts: myhosts
+- name: Start the application Docker Compose stack
   become: true
+  roles:
+    - deploy
 
   tasks:
     - name: Create application directory

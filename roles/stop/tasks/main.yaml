@@ -1,6 +1,7 @@
 - name: Stop Docker Compose stack and cleans up
-  hosts: myhosts
   become: true
+  roles:
+    - stop
 
   tasks:
     - name: Stop Docker Compose stack

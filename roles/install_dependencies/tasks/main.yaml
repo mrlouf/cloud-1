@@ -1,6 +1,7 @@
 - name: Install and configure Docker with Docker Compose
-  hosts: myhosts
   become: true
+  roles:
+    - install_dependencies
 
   tasks:
     - name: Ensure dependencies are installed
