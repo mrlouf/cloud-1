@@ -19,80 +19,50 @@ data "aws_ami" "debian" {
   owners = ["136693071363"] # Debian
 }
 
+data "aws_security_group" "ansible-sg" {
+  id = "sg-0a25fc5665b04e27d"
+}
+
+data "aws_security_group" "server-sg" {
+  id = "sg-0ff0aa6d2bd9d10c0"
+}
+
 resource "aws_instance" "ansible_master" {
-  ami           = data.aws_ami.debian.id
-  instance_type = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.ansible-sg.id]
+  ami                     = data.aws_ami.debian.id
+  instance_type           = "t3.micro"
+  vpc_security_group_ids  = [data.aws_security_group.ansible-sg.id]
+  key_name                = "Asus"
 
   tags = {
-    Name = "DebianAnsibleMaster"
+    Name = "tf_ansible_master"
   }
+
+  # Install Ansible on the instance at launch and make it run the playbooks
+  user_data = <<-EOF
+              #!/bin/bash
+              apt update
+              apt install git -y
+              git clone --branch nponchon https://github.com/mrlouf/cloud-1.git /home/admin/
+              bash /home/admin/install-ansible.sh
+              ansible-playbook -i /home/admin/inventory.yaml /home/admin/main.yaml --tags install
+              ansible-playbook -i /home/admin/inventory.yaml /home/admin/main.yaml --tags deploy
+              EOF
 }
 
 resource "aws_instance" "web_server" {
   ami           = data.aws_ami.debian.id
   instance_type = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.server-sg.id]
+  vpc_security_group_ids = [data.aws_security_group.server-sg.id]
 
   tags = {
-    Name = "DebianWebServer"
+    Name = "tf_remote_server"
   }
 }
 
-resource "aws_security_group" "server-sg" {
-  name        = "server-sg"
-  description = "allow ssh AND http connection"
-  vpc_id      = "vpc-05ae2da1e076b6992"
-
-  ingress {
-    description      = ""
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description      = ""
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description      = "from ansible-sg"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    security_groups  = ["sg-0a25fc5665b04e27d"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
+output "ansible_master_ip" {
+  value = aws_instance.ansible_master.public_ip
 }
 
-resource "aws_security_group" "ansible-sg" {
-  name        = "ansible-sg"
-  description = "allow ssh connection"
-  vpc_id      = "vpc-05ae2da1e076b6992"
-
-  egress {
-    description      = ""
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-  ingress {
-    description      = "ssh from Asus"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["79.154.192.154/32"]
-  }
+output "web_server_ip" {
+  value = aws_instance.web_server.public_ip
 }
