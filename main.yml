@@ -2,8 +2,8 @@
   hosts: myhosts
   become: true
   roles:
-    - install_dependencies
-  tags: install_dependencies
+    - install
+  tags: install
 
 - name: Deploy Inception stack
   hosts: myhosts

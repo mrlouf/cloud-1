@@ -7,49 +7,49 @@
 
 - name: Copy docker-compose.yml
   copy:
-    src: /home/{{ ansible_user }}/app/docker-compose.yml
+    src: ../../../app/docker-compose.yml
     dest: /home/{{ ansible_user }}/app/docker-compose.yml
     owner: "{{ ansible_user }}"
     mode: '0644'
 
 - name: Copy .env file
   copy:
-    src: /home/{{ ansible_user }}/app/.env
+    src: ../../../app/.env
     dest: /home/{{ ansible_user }}/app/.env
     owner: "{{ ansible_user }}"
     mode: '0644'
 
 - name: Copy image file
   copy:
-    src: /home/{{ ansible_user }}/app/cloud.jpg
+    src: ../../../app/cloud.jpg
     dest: /home/{{ ansible_user }}/app/cloud.jpg
     owner: "{{ ansible_user }}"
     mode: '0644'
 
 - name: Copy wp-install.sh script
   copy:
-    src: /home/{{ ansible_user }}/app/wp-install.sh
+    src: ../../../app/wp-install.sh
     dest: /home/{{ ansible_user }}/app/wp-install.sh
     owner: "{{ ansible_user }}"
     mode: '0755'
 
 - name: Copy nginx.conf file
   copy:
-    src: /home/{{ ansible_user }}/app/nginx.conf
+    src: ../../../app/nginx.conf
     dest: /home/{{ ansible_user }}/app/nginx.conf
     owner: "{{ ansible_user }}"
     mode: '0644'
 
-- name: Obtain SSL certificates with Certbot (standalone)
+- name: Generate self-signed SSL certificate
   shell: |
-    docker run --rm -p 80:80 \
-      -v $PWD/certbot/conf:/etc/letsencrypt \
-      -v $PWD/certbot/www:/var/www/certbot \
-      certbot/certbot certonly --standalone \
-      --non-interactive --agree-tos --email admin@email.com \
-      -d mrlouf.studio -d www.mrlouf.studio
+    mkdir -p certbot/conf
+    openssl req -x509 -nodes -days 365 \
+      -newkey rsa:2048 \
+      -keyout certbot/conf/selfsigned.key \
+      -out certbot/conf/selfsigned.crt \
+      -subj "/CN=mrlouf.studio"
   args:
-    chdir: /home/{{ ansible_user }}/app
+    chdir: ./app
 
 - name: Start Docker Compose stack
   community.docker.docker_compose_v2:
