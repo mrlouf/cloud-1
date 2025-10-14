@@ -66,7 +66,7 @@ else
             <p>If you can read this, it means that nzhuzhle & I succeeded in automating the deployment of this WordPress instance.</p>
             <p>Please take a moment to appreciate the beauty of clouds.</p>
             <img src=\"$IMAGE_URL\" alt=\"Cloud Photo\" style=\"max-width:100%;height:auto;\">
-            <a href=\"#\" onclick=\"window.location.href=window.location.origin+'/adminer/';\" style=\"background-color: #FF0000; color: white; padding: 15px 32px; line-height: 0px; vertical-align: middle; text-align: center; text-decoration: none; display: inline-block; margin: 4px 2px; cursor: pointer; border-radius: 16px;\">
+            <a href=\"https://$DOMAIN_NAME/adminer/\" style=\"background-color: #FF0000; color: white; padding: 15px 32px; line-height: 0px; vertical-align: middle; text-align: center; text-decoration: none; display: inline-block; margin: 4px 2px; cursor: pointer; border-radius: 16px;\">
                 Go to Adminer to check the database
             </a>
         </div>" --allow-root
