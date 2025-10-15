@@ -31,6 +31,15 @@ data "aws_key_pair" "asus" {
 # -_-_-_-_- RESOURCES -_-_-_-_- #
 #################################
 
+resource "aws_eip" "webserv_eip" {
+  domain = "vpc"
+}
+
+resource "aws_eip_association" "webserv_eip_association" {
+  instance_id    = aws_instance.web_server.id
+  allocation_id  = aws_eip.webserv_eip.id
+}
+
 resource "aws_security_group" "webserv_sg" {
   name        = "webserv-sg"
   description = "Allow HTTP, HTTPS, and SSH"
