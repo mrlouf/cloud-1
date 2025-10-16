@@ -1,0 +1,27 @@
+
+
+all: install deploy
+
+# Install Docker
+install:
+	@echo "➡️  Install docker on the server..."
+	ansible-playbook -i inventory.yaml main.yaml --tags="install"
+
+# Deploy all
+deploy:
+	@echo "➡️  Running Ansible playbook"
+	ansible-playbook -i inventory.yaml main.yaml --tags="deploy"
+
+# Clean containers remotely
+stop:
+	@echo "➡️  Stopping the containers"
+	ansible-playbook -i inventory.yaml main.yaml --tags="stop"
+
+# Create instances using Terraform
+create:
+	@echo "➡️  Creating the instances"
+	terraform apply
+
+
+.PHONY: all install deploy stop create
+
