@@ -5,12 +5,14 @@ all: install deploy
 # Install Docker
 install:
 	@echo "➡️  Install docker on the server..."
+	# awk -F= '{print $1 ": " $2}' .env > group_vars/all.yml
 	ansible-playbook -i inventory.yaml main.yaml --tags="install"
 
 # Deploy all
 deploy:
 	@echo "➡️  Running Ansible playbook"
 	ansible-playbook -i inventory.yaml main.yaml --tags="deploy"
+
 
 # Clean containers remotely
 stop:
