@@ -27,73 +27,33 @@ data "aws_key_pair" "asus" {
   key_name = "Asus"
 }
 
-#################################
-# -_-_-_-_- RESOURCES -_-_-_-_- #
-#################################
-
-resource "aws_eip" "webserv_eip" {
-  domain = "vpc"
-}
-
-resource "aws_eip_association" "webserv_eip_association" {
-  instance_id    = aws_instance.web_server.id
-  allocation_id  = aws_eip.webserv_eip.id
-}
-
-resource "aws_security_group" "webserv_sg" {
-  name        = "webserv-sg"
-  description = "Allow HTTP, HTTPS, and SSH"
-  vpc_id      = "vpc-05ae2da1e076b6992"
-
-  ingress {
-    description      = "Allow HTTP"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description      = "Allow HTTPS"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description      = "Allow SSH"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"] # Using 0.0.0.0/0 for demo purposes; restrict to local IP for prod would be a good idea
-  }
-
-  egress {
-    description      = "Allow all outbound traffic"
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "tf_webserv_sg"
+locals {
+  servers = {
+    server1 = {
+      name	= "tf_remote_server_1"
+      sg	= "webserv-sg-1"
+    }
+    server2 = {
+      name	= "tf_remote_server_2"
+      sg	= "webserv-sg-2"
+    }
   }
 }
 
-resource "aws_instance" "web_server" {
-  ami                     = data.aws_ami.debian.id
-  instance_type           = "t3.micro"
-  vpc_security_group_ids  = [resource.aws_security_group.webserv_sg.id]
-  key_name                = data.aws_key_pair.asus.key_name
-  subnet_id               = "subnet-029e33fb3e3342fac"
-
-  tags = {
-    Name = "tf_remote_server"
-  }
+module "web_server" {
+  for_each	= local.servers
+  source	= "./modules/webserver"
+  ami		= data.aws_ami.debian.id
+  instance_type	= "t3.micro"
+  key_name	= data.aws_key_pair.asus.key_name
+  subnet_id	= "subnet-029e33fb3e3342fac"
+  vpc_id	= "vpc-05ae2da1e076b6992"
+  instance_name	= each.value.name
+  sg_name	= each.value.sg
 }
 
-output "web_server_ip" {
-  value = aws_instance.web_server.public_ip
+output "web_server_ips" {
+  value = {
+    for k, m in module.web_server : k => m.public_ip
+  }
 }
