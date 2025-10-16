@@ -94,6 +94,7 @@ resource "aws_instance" "web_server" {
   }
 }
 
-output "web_server_ip" {
-  value = aws_instance.web_server.public_ip
+output "public_ip" {
+  value = aws_eip.webserv_eip.public_ip
 }
+
