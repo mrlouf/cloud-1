@@ -1,6 +1,6 @@
 myhosts:
   hosts:
     remote-server1:
-      ansible_host: 56.228.11.132
+      ansible_host: 13.49.254.18
       ansible_user: admin
       ansible_ssh_private_key_file: ~/.ssh/Asus.pem
